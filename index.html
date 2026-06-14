@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>データベース概論・実習① 演習</title>
+<style>
+  :root{--main:#2563eb;--bg:#f7f8fa;--card:#fff;--line:#e2e5ea;--ok:#0a7d3c;--okbg:#eafaf0;--ng:#c0392b;--ngbg:#fdecea;}
+  *{box-sizing:border-box;-webkit-text-size-adjust:100%;}
+  body{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;line-height:1.8;margin:0;padding:12px;background:var(--bg);color:#1a1a1a;font-size:16px;}
+  header{background:var(--main);color:#fff;padding:16px;border-radius:12px;margin-bottom:16px;}
+  header h1{font-size:1.15em;margin:0;}
+  header p{margin:4px 0 0;font-size:0.85em;opacity:0.9;}
+  .daimon{font-weight:bold;color:var(--main);font-size:1.05em;margin:18px 0 6px;padding-left:6px;border-left:4px solid var(--main);}
+  .question-block{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+  .question-title{display:inline-block;background:var(--main);color:#fff;font-size:0.9em;padding:3px 10px;border-radius:6px;margin-bottom:8px;}
+  .question-text{margin:8px 0;}
+  pre{background:#1e293b;color:#e2e8f0;padding:12px;border-radius:8px;overflow-x:auto;font-size:0.85em;line-height:1.6;-webkit-overflow-scrolling:touch;}
+  .question-text code{background:#eef1f6;color:#c026d3;padding:1px 5px;border-radius:4px;font-size:0.9em;}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:0.85em;display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;}
+  table.def td,table.def th{border:1px solid #c8ccd4;padding:7px 10px;text-align:center;}
+  table thead th{background:#eef1f6;}
+  table.choices{border:none;display:table;white-space:normal;}
+  table.choices td{padding:3px 12px 3px 0;border:none;vertical-align:top;font-size:1em;}
+  ol.choices{list-style:none;padding-left:0;margin:8px 0;}
+  ol.choices li{margin-bottom:6px;padding:6px 10px;background:#f4f6f9;border-radius:8px;}
+  .blank{display:inline-block;min-width:1.8em;text-align:center;font-weight:bold;color:var(--main);}
+  .diagram{border:1px dashed #aab;padding:10px;background:#fbfcfe;border-radius:8px;margin:10px 0;font-size:0.85em;color:#444;}
+  .ans-area{margin-top:10px;display:flex;flex-direction:column;gap:8px;}
+  .ans-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ans-row label{min-width:42px;font-weight:bold;color:#444;font-size:0.9em;}
+  .ans-area input[type=text]{flex:1;min-width:120px;padding:9px;border:2px solid var(--line);border-radius:8px;font-size:1em;}
+  .ans-area input:focus{outline:none;border-color:var(--main);}
+  /* 〇×タップボタン */
+  .oxq{display:flex;align-items:center;gap:8px;background:#f4f6f9;border-radius:8px;padding:8px 10px;margin-bottom:6px;flex-wrap:wrap;}
+  .oxq .txt{flex:1;min-width:60%;}
+  .oxbtns{display:flex;gap:6px;}
+  .oxbtn{width:46px;height:46px;border:2px solid var(--line);background:#fff;border-radius:10px;font-size:1.3em;font-weight:bold;color:#888;cursor:pointer;line-height:1;}
+  .oxbtn:active{transform:scale(.95);}
+  .oxbtn.sel-o{border-color:var(--ok);background:var(--okbg);color:var(--ok);}
+  .oxbtn.sel-x{border-color:var(--ng);background:var(--ngbg);color:var(--ng);}
+  .check-btn{margin-top:10px;padding:11px;background:var(--main);color:#fff;border:none;border-radius:10px;font-size:0.95em;font-weight:bold;width:100%;cursor:pointer;}
+  .check-btn:active{opacity:.85;}
+  .result{margin-top:10px;padding:12px;border-radius:10px;font-size:0.93em;display:none;}
+  .result.show{display:block;}
+  .result.allok{background:var(--okbg);border:1px solid #b6e6c7;}
+  .result.hasng{background:var(--ngbg);border:1px solid #f3c0ba;}
+  .mark-ok{color:var(--ok);font-weight:bold;}
+  .mark-ng{color:var(--ng);font-weight:bold;}
+  .result h4{margin:8px 0 4px;font-size:0.92em;}
+  .result .exp{color:#333;}
+  .scorebar{position:sticky;bottom:0;background:var(--main);color:#fff;text-align:center;padding:12px;border-radius:12px;margin-top:16px;font-weight:bold;font-size:1.05em;box-shadow:0 -2px 8px rgba(0,0,0,0.1);}
+  .reset-btn{display:block;width:100%;margin-top:8px;padding:10px;background:#fff;color:var(--main);border:2px solid var(--main);border-radius:10px;font-weight:bold;cursor:pointer;}
+  .page-number{text-align:right;color:#999;font-size:0.75em;}
+  small.hint{color:#888;font-size:0.78em;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>データベース概論・実習①</h1>
+  <p>定期考査 2306-01（MySQL前提）／自己採点モード</p>
+</header>
+
+<main>
+
+<!-- ===== 概論 問01 ===== -->
+<p class="daimon">【概論】問題01　データベースの種類と特徴</p>
+<section class="question-block">
+  <span class="question-title">問 01</span>
+  <p class="question-text">空欄①～⑥に当てはまる用語を<strong>記号（ア～テ）</strong>で答えなさい。</p>
+  <p class="question-text">データベースとは（<span class="blank">①</span>）に整理されたデータの集合体。実際に操作する役割は（<span class="blank">②</span>）が担う。最も多く使われるモデルは（<span class="blank">③</span>）で、（<span class="blank">④</span>）という概念でデータを格納し関係付ける。もう1つの特徴は（<span class="blank">⑤</span>）という言語が（<span class="blank">⑥</span>）されていること。</p>
+  <table class="choices"><tbody>
+    <tr><td>ア．論理的</td><td>イ．物理的</td><td>ウ．標準化</td></tr>
+    <tr><td>エ．テーブル</td><td>オ．VBA</td><td>カ．フォルダ</td></tr>
+    <tr><td>キ．ネットワーク型DB</td><td colspan="2">ク．データベース管理システム</td></tr>
+    <tr><td>ケ．ファイル</td><td>コ．分散型システム</td><td>サ．NoSQL</td></tr>
+    <tr><td>シ．構造的</td><td>ス．特殊化</td><td>セ．XML</td></tr>
+    <tr><td>ソ．OO型DB</td><td colspan="2">タ．リレーショナル型DB</td></tr>
+    <tr><td>チ．SQL</td><td>ツ．分散化</td><td>テ．集中型システム</td></tr>
+  </tbody></table>
+  <div class="ans-area">
+    <div class="ans-row"><label>①</label><input type="text" data-ans="ア"></div>
+    <div class="ans-row"><label>②</label><input type="text" data-ans="ク"></div>
+    <div class="ans-row"><label>③</label><input type="text" data-ans="タ"></div>
+    <div class="ans-row"><label>④</label><input type="text" data-ans="エ"></div>
+    <div class="ans-row"><label>⑤</label><input type="text" data-ans="チ"></div>
+    <div class="ans-row"><label>⑥</label><input type="text" data-ans="ウ"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="①論理的 ②DBMS ③リレーショナル型DB ④テーブル ⑤SQL ⑥標準化。データはDBMSが操作し、RDBはテーブルでデータを関係付け、標準化されたSQLで操作します。"></div>
+</section>
+
+<!-- ===== 概論 問02 （〇×タップ）===== -->
+<p class="daimon">問題02　SQLの概要</p>
+<section class="question-block">
+  <span class="question-title">問 02</span>
+  <p class="question-text">各記述が正しければ〇、誤りなら×を<strong>タップ</strong>で選びなさい。</p>
+  <div class="ans-area">
+    <div class="oxq" data-ans="×"><span class="txt">ア．DBの種類ごとにSQLの文法は全く違う。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">イ．SQLは複数の命令で1つの目的を達する手続き型言語である。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="〇"><span class="txt">ウ．SQLのキーワードは大文字小文字を区別しないが、データは区別する。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="〇"><span class="txt">エ．DMLは検索・追加・更新・削除の操作ができる。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">オ．DDLはユーザー作成やアクセス制御、トランザクション・ロックの制御設定ができる。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">カ．DCLはDBやテーブル、インデックスやビューを定義できる。</span><span class="oxbtns"></span></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="ア×:SQLは標準化され基本は共通。イ×:SQLは非手続き型(宣言型)。ウ〇。エ〇。オ×:これはDCLの説明。カ×:これはDDLの説明。"></div>
+</section>
+
+<!-- ===== 実習 問03 （〇×タップ）===== -->
+<p class="daimon">【実習】問題01　データベース設計</p>
+<section class="question-block">
+  <span class="question-title">問 03</span>
+  <p class="question-text">各記述が正しければ〇、誤りなら×をタップで選びなさい。</p>
+  <div class="ans-area">
+    <div class="oxq" data-ans="〇"><span class="txt">ア．データ管理にはテーブルを作成する必要がある。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="〇"><span class="txt">イ．作成前にテーブル名・列名・データ型・列の属性を決めておく必要がある。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">ウ．列のデータ型に関わらず、決められた型以外のデータも格納できる。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="〇"><span class="txt">エ．列ごとに制約やデフォルト値を設定する。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">オ．属性の1つである外部キーを設定して、データを特定できるようにする。</span><span class="oxbtns"></span></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="ウ×:決めた型以外は格納できない。オ×:データを一意に特定するのは『主キー』。外部キーは他テーブルとの関連付け用。"></div>
+</section>
+
+<!-- ===== 問04 ===== -->
+<section class="question-block">
+  <span class="question-title">問 04</span>
+  <p class="question-text">列①～④に最適なデータ型の組み合わせをア～エで答えなさい。</p>
+  <table class="def">
+    <thead><tr><th>①番号</th><th>②名前</th><th>③誕生日</th><th>④平均点</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>鈴木 一郎</td><td>2000-02-01</td><td>78.2</td></tr>
+      <tr><td>2</td><td>佐藤 陽介</td><td>1998-09-09</td><td>64.5</td></tr>
+      <tr><td>3</td><td>山田 香</td><td>1992-05-21</td><td>82.3</td></tr>
+    </tbody>
+  </table>
+  <ol class="choices">
+    <li>ア．①INT ②CHAR ③DATETIME ④DOUBLE</li>
+    <li>イ．①CHAR ②VARCHAR ③TIMESTAMP ④INT</li>
+    <li>ウ．①TIME ②INT ③DATE ④FLOAT</li>
+    <li>エ．①INT ②VARCHAR ③DATE ④DOUBLE</li>
+  </ol>
+  <div class="ans-area">
+    <div class="ans-row"><label>記号</label><input type="text" data-ans="エ"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="正解=エ。①番号→INT、②名前→可変長のVARCHAR、③誕生日→日付のみDATE、④平均点→小数のDOUBLE。"></div>
+</section>
+
+<!-- ===== 問05 ===== -->
+<section class="question-block">
+  <span class="question-title">問 05</span>
+  <p class="question-text">列に対し、同一の値を入力できない制約を英語またはカタカナで答えなさい。</p>
+  <div class="ans-area">
+    <div class="ans-row"><label>答</label><input type="text" data-ans="UNIQUE|ユニーク|UNIQUE制約|ユニーク制約"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="正解=UNIQUE(ユニーク)制約。値の重複を許さない制約です。"></div>
+</section>
+
+<!-- ===== 問06 ===== -->
+<section class="question-block">
+  <span class="question-title">問 06</span>
+  <p class="question-text">非正規形のテーブルの特徴をア～オから<strong>3つ</strong>、記号で答えなさい。<small class="hint">（順不同・カンマ区切り可）</small></p>
+  <ol class="choices">
+    <li>ア．検索効率は向上するが、更新効率は低下する。</li>
+    <li>イ．操作ミスによるデータの不整合が起きやすい。</li>
+    <li>ウ．レコードの情報が増えると列数が増える。</li>
+    <li>エ．テーブルの情報が明確になる。</li>
+    <li>オ．データの冗長性が排除される。</li>
+  </ol>
+  <div class="ans-area">
+    <div class="ans-row"><label>3つ</label><input type="text" data-ans="set:ア,イ,ウ" placeholder="例：ア イ ウ"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="正解=ア・イ・ウ。エ・オは正規化したテーブルの特徴。"></div>
+</section>
+
+<!-- ===== 問07 ===== -->
+<p class="daimon">問題02　DB/テーブル/インデックス/ビューの定義</p>
+<section class="question-block">
+  <span class="question-title">問 07</span>
+  <p class="question-text">phpMyAdminで「shukko.taiou」列と「zaiko.idzai」列に外部キー制約を設定する手順。空欄①～④を答えなさい。</p>
+  <div class="diagram">ア．「taiou」を後で外部キーにするため、＜インデックス＞リストから（①）を選択。<br>ウ．カラムから（②）、テーブルから（③）を選ぶと、右端に（④）が表示される。</div>
+  <div class="ans-area">
+    <div class="ans-row"><label>①</label><input type="text" data-ans="INDEX|インデックス"></div>
+    <div class="ans-row"><label>②</label><input type="text" data-ans="taiou"></div>
+    <div class="ans-row"><label>③</label><input type="text" data-ans="zaiko"></div>
+    <div class="ans-row"><label>④</label><input type="text" data-ans="idzai"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="①INDEX ②taiou ③zaiko ④idzai。外部キーにする列には先にINDEXを設定。※操作手順問題のため学校の解答も確認推奨。"></div>
+</section>
+
+<!-- ===== 問08 ===== -->
+<section class="question-block">
+  <span class="question-title">問 08</span>
+  <p class="question-text">SQL文になるよう空欄①～⑥を答えなさい。</p>
+  <pre><code>（①）DATABASE DB名;  （①）TABLE 表名;  （①）VIEW ビュー名;
+（②）TABLE 表名 （③）INDEX [名](列名);
+（②）TABLE 表名 （④）インデックス名;
+（⑤）VIEW ビュー名 （⑥）SELECT文;</code></pre>
+  <div class="ans-area">
+    <div class="ans-row"><label>①</label><input type="text" data-ans="DROP"></div>
+    <div class="ans-row"><label>②</label><input type="text" data-ans="ALTER"></div>
+    <div class="ans-row"><label>③</label><input type="text" data-ans="ADD"></div>
+    <div class="ans-row"><label>④</label><input type="text" data-ans="DROP"></div>
+    <div class="ans-row"><label>⑤</label><input type="text" data-ans="CREATE"></div>
+    <div class="ans-row"><label>⑥</label><input type="text" data-ans="AS"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="①DROP ②ALTER ③ADD ④DROP ⑤CREATE ⑥AS。削除はDROP、既存表の変更はALTER TABLE、追加ADD/削除DROP、ビュー作成はCREATE VIEW ... AS。"></div>
+</section>
+
+<!-- ===== 問09 （〇×タップ）===== -->
+<section class="question-block">
+  <span class="question-title">問 09</span>
+  <p class="question-text">各記述が正しければ〇、誤りなら×をタップで選びなさい。</p>
+  <div class="ans-area">
+    <div class="oxq" data-ans="〇"><span class="txt">ア．Aの外部キーがBの主キーと関連する時、一致するBの主キーデータは通常削除できない。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">イ．インデックスは選択肢が少ないテーブルに設定した方が効果が高い。</span><span class="oxbtns"></span></div>
+    <div class="oxq" data-ans="×"><span class="txt">ウ．AとBを内部結合したビューCは、A・Bからデータを削除してもCに残る。</span><span class="oxbtns"></span></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="ア〇:参照されている主キーは削除制限される。イ×:値の種類が多いほど効果大。ウ×:ビューは実データを持たず元を参照するだけなので残らない。"></div>
+</section>
+
+<!-- ===== 問10 ===== -->
+<p class="daimon">問題03　データの検索</p>
+<section class="question-block">
+  <span class="question-title">問 10</span>
+  <p class="question-text">sales（販売）テーブルに対し、空欄①～⑤を答えなさい。</p>
+  <table class="def">
+    <thead><tr><th>id</th><th>date</th><th>price</th><th>buyer_id</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>2020-04-01</td><td>12,800</td><td>012</td></tr>
+      <tr><td>2</td><td>2020-04-01</td><td>3,200</td><td>008</td></tr>
+      <tr><td>3</td><td>2020-04-02</td><td>4,560</td><td>002</td></tr>
+      <tr><td>4</td><td>2020-04-03</td><td>6,700</td><td>008</td></tr>
+      <tr><td>5</td><td>2020-04-05</td><td>9,800</td><td>NULL</td></tr>
+    </tbody>
+  </table>
+  <pre><code>SELECT * FROM sales
+WHERE date BETWEEN '2020-04-02' （①）'2020-04-03';
+
+SELECT date（②）日付, price（②）購入価格
+FROM sales WHERE buyer_id（③）(002,008);
+
+SELECT * FROM sales
+WHERE buyer_id（④）NULL ORDER BY price（⑤）;</code></pre>
+  <div class="ans-area">
+    <div class="ans-row"><label>①</label><input type="text" data-ans="AND"></div>
+    <div class="ans-row"><label>②</label><input type="text" data-ans="AS"></div>
+    <div class="ans-row"><label>③</label><input type="text" data-ans="IN"></div>
+    <div class="ans-row"><label>④</label><input type="text" data-ans="IS NOT"></div>
+    <div class="ans-row"><label>⑤</label><input type="text" data-ans="DESC"></div>
+  </div>
+  <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
+  <div class="result" data-exp="①AND(BETWEEN A AND B) ②AS(別名) ③IN(複数一致) ④IS NOT(NULLでない=IS NOT NULL) ⑤DESC(降順)。"></div>
+</section>
+
+<div class="scorebar" id="scorebar">「答え合わせ」で採点／合計を表示</div>
+<button class="reset-btn" onclick="resetAll()">すべてリセット</button>
+
+<p class="page-number">2306-01</p>
+</main>
+
+<script>
+// 〇×ボタンを生成
+document.querySelectorAll(".oxq").forEach(q=>{
+  const wrap=q.querySelector(".oxbtns");
+  ["〇","×"].forEach(v=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="oxbtn"; b.textContent=v;
+    b.onclick=()=>{
+      q.dataset.choice=v;
+      wrap.querySelectorAll(".oxbtn").forEach(x=>x.classList.remove("sel-o","sel-x"));
+      b.classList.add(v==="〇"?"sel-o":"sel-x");
+    };
+    wrap.appendChild(b);
+  });
+});
+
+function norm(s){
+  s=(s||"").trim();
+  s=s.replace(/[Ａ-Ｚａ-ｚ０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0));
+  s=s.replace(/[○◯oO0]/g,"〇").replace(/[×✕✖xX]/g,"×");
+  s=s.replace(/\s+/g,"").toUpperCase();
+  return s;
+}
+function isCorrect(input, ans){
+  if(ans.startsWith("set:")){
+    const need=ans.slice(4).split(",").map(norm).sort();
+    const got=input.split(/[,、\s]+/).map(norm).filter(Boolean).sort();
+    if(got.length!==need.length) return false;
+    return need.every((v,i)=>v===got[i]);
+  }
+  const cands=ans.split("|").map(norm);
+  return cands.includes(norm(input));
+}
+function checkBlock(btn){
+  const block=btn.closest(".question-block");
+  const res=block.querySelector(".result");
+  let ok=0,total=0,html="";
+
+  // テキスト入力欄
+  block.querySelectorAll("input[data-ans]").forEach(inp=>{
+    total++;
+    const ans=inp.getAttribute("data-ans");
+    const correct=isCorrect(inp.value,ans);
+    if(correct){ok++; inp.style.borderColor="#0a7d3c";} else {inp.style.borderColor="#c0392b";}
+    const shown=ans.replace(/^set:/,"").replace(/\|/g," または ").replace(/,/g,"・");
+    const lbl=inp.closest(".ans-row").querySelector("label").textContent;
+    html+=`<div>${lbl} ${correct?'<span class="mark-ok">〇 正解</span>':'<span class="mark-ng">× 不正解</span>（正解：'+shown+'）'}</div>`;
+  });
+
+  // 〇×タップ欄
+  block.querySelectorAll(".oxq").forEach((q,i)=>{
+    total++;
+    const ans=norm(q.getAttribute("data-ans"));
+    const choice=q.dataset.choice||"";
+    const correct=norm(choice)===ans;
+    const lbl=(q.querySelector(".txt").textContent.trim().charAt(0))||("("+(i+1)+")");
+    if(correct){ok++; q.style.outline="2px solid #0a7d3c";} else {q.style.outline="2px solid #c0392b";}
+    const got=choice?choice:"未選択";
+    html+=`<div>${lbl} ${correct?'<span class="mark-ok">〇 正解</span>':'<span class="mark-ng">× 不正解</span>（あなた：'+got+' ／ 正解：'+q.getAttribute("data-ans")+'）'}</div>`;
+  });
+
+  const all=ok===total;
+  res.className="result show "+(all?"allok":"hasng");
+  res.innerHTML=`<div><strong>${ok} / ${total} 問正解</strong></div>${html}<h4>解説</h4><div class="exp">${res.getAttribute("data-exp")}</div>`;
+  block.dataset.score=ok; block.dataset.total=total;
+  updateScore();
+  res.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function updateScore(){
+  let s=0,t=0,done=0,blocks=document.querySelectorAll(".question-block");
+  blocks.forEach(b=>{ if(b.dataset.total){s+=+b.dataset.score; t+=+b.dataset.total; done++;}});
+  const bar=document.getElementById("scorebar");
+  if(t===0){bar.textContent="「答え合わせ」で採点／合計を表示";return;}
+  bar.textContent=`採点済 ${done}/${blocks.length}問　合計 ${s} / ${t} 点（${Math.round(s/t*100)}%）`;
+}
+function resetAll(){
+  document.querySelectorAll("input[data-ans]").forEach(i=>{i.value="";i.style.borderColor="";});
+  document.querySelectorAll(".oxq").forEach(q=>{delete q.dataset.choice;q.style.outline="";q.querySelectorAll(".oxbtn").forEach(b=>b.classList.remove("sel-o","sel-x"));});
+  document.querySelectorAll(".result").forEach(r=>{r.className="result";r.innerHTML="";});
+  document.querySelectorAll(".question-block").forEach(b=>{delete b.dataset.score;delete b.dataset.total;});
+  updateScore();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
