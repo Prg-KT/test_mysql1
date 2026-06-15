@@ -31,7 +31,6 @@
   .ans-row label{min-width:42px;font-weight:bold;color:#444;font-size:0.9em;}
   .ans-area input[type=text]{flex:1;min-width:120px;padding:9px;border:2px solid var(--line);border-radius:8px;font-size:1em;}
   .ans-area input:focus{outline:none;border-color:var(--main);}
-  /* 〇×タップボタン */
   .oxq{display:flex;align-items:center;gap:8px;background:#f4f6f9;border-radius:8px;padding:8px 10px;margin-bottom:6px;flex-wrap:wrap;}
   .oxq .txt{flex:1;min-width:60%;}
   .oxbtns{display:flex;gap:6px;}
@@ -48,7 +47,7 @@
   .mark-ok{color:var(--ok);font-weight:bold;}
   .mark-ng{color:var(--ng);font-weight:bold;}
   .result h4{margin:8px 0 4px;font-size:0.92em;}
-  .result .exp{color:#333;}
+  .result .exp{color:#333;white-space:pre-line;}
   .scorebar{position:sticky;bottom:0;background:var(--main);color:#fff;text-align:center;padding:12px;border-radius:12px;margin-top:16px;font-weight:bold;font-size:1.05em;box-shadow:0 -2px 8px rgba(0,0,0,0.1);}
   .reset-btn{display:block;width:100%;margin-top:8px;padding:10px;background:#fff;color:var(--main);border:2px solid var(--main);border-radius:10px;font-weight:bold;cursor:pointer;}
   .page-number{text-align:right;color:#999;font-size:0.75em;}
@@ -80,7 +79,7 @@
     <tr><td>チ．SQL</td><td>ツ．分散化</td><td>テ．集中型システム</td></tr>
   </tbody></table>
   <div class="ans-area">
-    <div class="ans-row"><label>①</label><input type="text" data-ans="ア"></div>
+    <div class="ans-row"><label>①</label><input type="text" data-ans="シ"></div>
     <div class="ans-row"><label>②</label><input type="text" data-ans="ク"></div>
     <div class="ans-row"><label>③</label><input type="text" data-ans="タ"></div>
     <div class="ans-row"><label>④</label><input type="text" data-ans="エ"></div>
@@ -88,10 +87,10 @@
     <div class="ans-row"><label>⑥</label><input type="text" data-ans="ウ"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="①論理的 ②DBMS ③リレーショナル型DB ④テーブル ⑤SQL ⑥標準化。データはDBMSが操作し、RDBはテーブルでデータを関係付け、標準化されたSQLで操作します。"></div>
+  <div class="result" data-exp="①シ（構造的） ②ク（DBMS） ③タ（リレーショナル型DB） ④エ（テーブル） ⑤チ（SQL） ⑥ウ（標準化）。データはDBMSが操作し、RDBはテーブルでデータを関係付け、標準化されたSQLで操作します。"></div>
 </section>
 
-<!-- ===== 概論 問02 （〇×タップ）===== -->
+<!-- ===== 概論 問02 ===== -->
 <p class="daimon">問題02　SQLの概要</p>
 <section class="question-block">
   <span class="question-title">問 02</span>
@@ -105,10 +104,15 @@
     <div class="oxq" data-ans="×"><span class="txt">カ．DCLはDBやテーブル、インデックスやビューを定義できる。</span><span class="oxbtns"></span></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="ア×:SQLは標準化され基本は共通。イ×:SQLは非手続き型(宣言型)。ウ〇。エ〇。オ×:これはDCLの説明。カ×:これはDDLの説明。"></div>
+  <div class="result" data-exp="ア×：SQLは標準化されているため各DBでほぼ同じ文法で記述されるが、DBに依存するDDLやDCLでは多少の方言も見られる。
+イ×：SQLは1つの命令で完結する非手続き型言語である。
+ウ〇：キーワードは予約語として登録されているため大文字・小文字は区別されない仕様だが、利用者が使用するデータは区別される。
+エ〇：DMLの説明として正しい。
+オ×：これはDCL（データ制御言語）の説明。
+カ×：これはDDL（データ定義言語）の説明。"></div>
 </section>
 
-<!-- ===== 実習 問03 （〇×タップ）===== -->
+<!-- ===== 実習 問03 ===== -->
 <p class="daimon">【実習】問題01　データベース設計</p>
 <section class="question-block">
   <span class="question-title">問 03</span>
@@ -121,7 +125,8 @@
     <div class="oxq" data-ans="×"><span class="txt">オ．属性の1つである外部キーを設定して、データを特定できるようにする。</span><span class="oxbtns"></span></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="ウ×:決めた型以外は格納できない。オ×:データを一意に特定するのは『主キー』。外部キーは他テーブルとの関連付け用。"></div>
+  <div class="result" data-exp="ウ×：プログラムから利用される場合を考慮すれば、カラムに格納されているデータはカラム以外のデータが保存される余地があってはいけない。
+オ×：主キーはデータ（レコード）を特定する目的で設定する。外部キーは複数のテーブルの結びつきを強くする目的で設定する。"></div>
 </section>
 
 <!-- ===== 問04 ===== -->
@@ -157,7 +162,7 @@
     <div class="ans-row"><label>答</label><input type="text" data-ans="UNIQUE|ユニーク|UNIQUE制約|ユニーク制約"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="正解=UNIQUE(ユニーク)制約。値の重複を許さない制約です。"></div>
+  <div class="result" data-exp="正解=UNIQUE／ユニーク(制約)。値の重複を許さない制約です。"></div>
 </section>
 
 <!-- ===== 問06 ===== -->
@@ -175,7 +180,11 @@
     <div class="ans-row"><label>3つ</label><input type="text" data-ans="set:ア,イ,ウ" placeholder="例：ア イ ウ"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="正解=ア・イ・ウ。エ・オは正規化したテーブルの特徴。"></div>
+  <div class="result" data-exp="正解=ア・イ・ウ。
+ア：テーブルを結び付ける操作は効率面ではあまり良くない。
+イ：重複するデータが存在すると人為的ミスの可能性が増える。
+ウ：1つのテーブルで複数の情報を管理すると列数が増える。
+（エ・オは正規化したテーブルの特徴）"></div>
 </section>
 
 <!-- ===== 問07 ===== -->
@@ -191,30 +200,27 @@
     <div class="ans-row"><label>④</label><input type="text" data-ans="idzai"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="①INDEX ②taiou ③zaiko ④idzai。外部キーにする列には先にINDEXを設定。※操作手順問題のため学校の解答も確認推奨。"></div>
+  <div class="result" data-exp="①INDEX ②taiou ③zaiko ④idzai。外部キーにする列には先にINDEXを設定。"></div>
 </section>
 
 <!-- ===== 問08 ===== -->
 <section class="question-block">
   <span class="question-title">問 08</span>
-  <p class="question-text">SQL文になるよう空欄①～⑥を答えなさい。</p>
+  <p class="question-text">SQL文になるよう空欄①～④を答えなさい。<small class="hint">（⑤⑥は元問題のCREATE/ASに対応）</small></p>
   <pre><code>（①）DATABASE DB名;  （①）TABLE 表名;  （①）VIEW ビュー名;
 （②）TABLE 表名 （③）INDEX [名](列名);
-（②）TABLE 表名 （④）インデックス名;
-（⑤）VIEW ビュー名 （⑥）SELECT文;</code></pre>
+（②）TABLE 表名 （④）インデックス名;</code></pre>
   <div class="ans-area">
     <div class="ans-row"><label>①</label><input type="text" data-ans="DROP"></div>
     <div class="ans-row"><label>②</label><input type="text" data-ans="ALTER"></div>
     <div class="ans-row"><label>③</label><input type="text" data-ans="ADD"></div>
-    <div class="ans-row"><label>④</label><input type="text" data-ans="DROP"></div>
-    <div class="ans-row"><label>⑤</label><input type="text" data-ans="CREATE"></div>
-    <div class="ans-row"><label>⑥</label><input type="text" data-ans="AS"></div>
+    <div class="ans-row"><label>④</label><input type="text" data-ans="DROP INDEX"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="①DROP ②ALTER ③ADD ④DROP ⑤CREATE ⑥AS。削除はDROP、既存表の変更はALTER TABLE、追加ADD/削除DROP、ビュー作成はCREATE VIEW ... AS。"></div>
+  <div class="result" data-exp="①DROP ②ALTER ③ADD ④DROP INDEX。削除はDROP、既存表の変更はALTER TABLE、インデックス追加はADD INDEX、削除はDROP INDEX。"></div>
 </section>
 
-<!-- ===== 問09 （〇×タップ）===== -->
+<!-- ===== 問09 ===== -->
 <section class="question-block">
   <span class="question-title">問 09</span>
   <p class="question-text">各記述が正しければ〇、誤りなら×をタップで選びなさい。</p>
@@ -224,7 +230,9 @@
     <div class="oxq" data-ans="×"><span class="txt">ウ．AとBを内部結合したビューCは、A・Bからデータを削除してもCに残る。</span><span class="oxbtns"></span></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="ア〇:参照されている主キーは削除制限される。イ×:値の種類が多いほど効果大。ウ×:ビューは実データを持たず元を参照するだけなので残らない。"></div>
+  <div class="result" data-exp="ア〇：外部キーを設定すると、複数テーブルの結びつきが強くなる制約が加わる。
+イ×：インデックスはデータの選択肢が多いテーブルに設定すると効果が見込まれる。
+ウ×：ビューはアクセスするたびに、仕込まれたSQL文が実行される（実データを持たない）。"></div>
 </section>
 
 <!-- ===== 問10 ===== -->
@@ -258,7 +266,7 @@ WHERE buyer_id（④）NULL ORDER BY price（⑤）;</code></pre>
     <div class="ans-row"><label>⑤</label><input type="text" data-ans="DESC"></div>
   </div>
   <button class="check-btn" onclick="checkBlock(this)">答え合わせ</button>
-  <div class="result" data-exp="①AND(BETWEEN A AND B) ②AS(別名) ③IN(複数一致) ④IS NOT(NULLでない=IS NOT NULL) ⑤DESC(降順)。"></div>
+  <div class="result" data-exp="①AND（BETWEEN A AND B） ②AS（別名） ③IN（複数一致） ④IS NOT（NULLでない=IS NOT NULL） ⑤DESC（降順）。"></div>
 </section>
 
 <div class="scorebar" id="scorebar">「答え合わせ」で採点／合計を表示</div>
@@ -268,7 +276,6 @@ WHERE buyer_id（④）NULL ORDER BY price（⑤）;</code></pre>
 </main>
 
 <script>
-// 〇×ボタンを生成
 document.querySelectorAll(".oxq").forEach(q=>{
   const wrap=q.querySelector(".oxbtns");
   ["〇","×"].forEach(v=>{
@@ -282,7 +289,6 @@ document.querySelectorAll(".oxq").forEach(q=>{
     wrap.appendChild(b);
   });
 });
-
 function norm(s){
   s=(s||"").trim();
   s=s.replace(/[Ａ-Ｚａ-ｚ０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0));
@@ -304,8 +310,6 @@ function checkBlock(btn){
   const block=btn.closest(".question-block");
   const res=block.querySelector(".result");
   let ok=0,total=0,html="";
-
-  // テキスト入力欄
   block.querySelectorAll("input[data-ans]").forEach(inp=>{
     total++;
     const ans=inp.getAttribute("data-ans");
@@ -315,8 +319,6 @@ function checkBlock(btn){
     const lbl=inp.closest(".ans-row").querySelector("label").textContent;
     html+=`<div>${lbl} ${correct?'<span class="mark-ok">〇 正解</span>':'<span class="mark-ng">× 不正解</span>（正解：'+shown+'）'}</div>`;
   });
-
-  // 〇×タップ欄
   block.querySelectorAll(".oxq").forEach((q,i)=>{
     total++;
     const ans=norm(q.getAttribute("data-ans"));
@@ -327,7 +329,6 @@ function checkBlock(btn){
     const got=choice?choice:"未選択";
     html+=`<div>${lbl} ${correct?'<span class="mark-ok">〇 正解</span>':'<span class="mark-ng">× 不正解</span>（あなた：'+got+' ／ 正解：'+q.getAttribute("data-ans")+'）'}</div>`;
   });
-
   const all=ok===total;
   res.className="result show "+(all?"allok":"hasng");
   res.innerHTML=`<div><strong>${ok} / ${total} 問正解</strong></div>${html}<h4>解説</h4><div class="exp">${res.getAttribute("data-exp")}</div>`;
